@@ -1,7 +1,4 @@
-"""Audio Processing Application.
-
-This module provides a PyQt5 GUI application for loading, filtering, and transforming audio files.
-"""
+"""UI application for loading, filtering, visualize and transforming audio files."""
 
 import sys
 
@@ -26,10 +23,10 @@ from scipy.signal import butter, lfilter
 
 
 class AudioApp(QMainWindow):
-    """Main window for the audio processing application."""
+    """Main window of the User Interface."""
 
     def __init__(self):
-        """Initialize the audio processing application."""
+        """Initialize the window and variables."""
         super().__init__()
         self.setWindowTitle("Audio Processing App")
         self.setGeometry(0, 0, 969, 526)
@@ -39,7 +36,7 @@ class AudioApp(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        """Set up the user interface for the application."""
+        """The first layout contains the controls and the second layout contains the plots."""
         main_layout = QHBoxLayout()
         controls_layout = QVBoxLayout()
         graphs_layout = QHBoxLayout()
@@ -124,7 +121,7 @@ class AudioApp(QMainWindow):
         main_layout.addLayout(graphs_layout)
 
     def load_file(self):
-        """Load an audio file and plot its waveform."""
+        """Load the audio file and plot in the designed widget."""
         file_name, _ = QFileDialog.getOpenFileName(
             self, "Open Audio File", "", "Audio Files (*.wav *.mp3 *.aac)"
         )
@@ -133,26 +130,26 @@ class AudioApp(QMainWindow):
             self.plot_audio(self.original_plot_widget, self.audio_data)
 
     def updateOrderLabel(self, value):
-        """Update the order label with the current slider value."""
+        """The slider value is updated in the label."""
         description_text = "Orden del filtro: "
         self.order_value_label.setText(f"{description_text}{value}")
 
     def updateLowFreqLabel(self, value):
-        """Update the low frequency label with the current slider value."""
+        """The slider value is updated in the label."""
         self.low_freq_value_label.setText(f"{self.low_freq_label_text}{value}")
 
     def updateFreqLabel(self, value):
-        """Update the frequency label with the current slider value."""
+        """The slider value is updated in the label."""
         description_text = "Frecuencia de corte: "
         self.freq_value_label.setText(f"{description_text}{value}")
 
     def plot_audio(self, plot_widget, data):
-        """Plot audio data on the specified plot widget."""
+        """Plot the audio data in the designed widget."""
         plot_widget.clear()
         plot_widget.plot(data)
 
     def apply_filter(self):
-        """Apply the selected filter to the loaded audio data."""
+        """A mapping is used to select the fiter type. The values comes from sliders."""
         filter_mappings = {
             "pasabajas": "lowpass",
             "pasaaltas": "highpass",
@@ -180,7 +177,7 @@ class AudioApp(QMainWindow):
         self.plot_audio(self.processed_plot_widget, self.filtered_data)
 
     def apply_transform(self):
-        """Apply the Fourier transform to the loaded audio data."""
+        """The Fourier Transform is calculated using the numpy.fft module."""
         if self.audio_data is None:
             return
         fft_result = np.abs(np.fft.fft(self.audio_data))
@@ -191,7 +188,7 @@ class AudioApp(QMainWindow):
         )
 
     def save_result(self):
-        """Save the filtered audio data to a file."""
+        """Save the data to an audio file."""
         sf.write("filtered_audio.wav", self.filtered_data, self.sample_rate, "PCM_24")
 
 
